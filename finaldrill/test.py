@@ -14,5 +14,10 @@ class MyAppTest(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data.decode(),"<p>Hello, World!</p>")
 
+    def test_getemployee(self):
+        response = self.app.get("/")
+        self.assertEqual(response.status_code,200)
+        self.assertTrue("EMPLOYEE" in response.data.decode())
+
     if __name__ == "__main__":
         unittest.main()
