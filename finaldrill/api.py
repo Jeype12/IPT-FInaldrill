@@ -25,8 +25,14 @@ def get_employee():
 
     return make_response(jsonify(data), 200)
 
-
-
+@app.route("/employee/<int:id>", methods=["GET"])
+def get_employee_id(id):
+    cur = mysql.connection.cursor()
+    query = """SELECT * FROM kwikkwikcafe.employee where EmployeeID = {}""".format(id)
+    cur.execute(query)
+    data = cur.fetchall()
+    cur.close()
+    return make_response(jsonify(data), 200)
 
 if __name__ == "__main__":
     app.run(debug=True)
