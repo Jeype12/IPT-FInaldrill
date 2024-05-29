@@ -1,5 +1,6 @@
-from flask import Flask, make_response, jsonify
+from flask import Flask, make_response, jsonify,request
 from flask_mysqldb import MySQL
+
 
 app = Flask(__name__)
 # MySQL configurations
@@ -33,6 +34,25 @@ def get_employee_id(id):
     data = cur.fetchall()
     cur.close()
     return make_response(jsonify(data), 200)
+
+@app.route("/employee", methods=["POST"])
+def add_employee():
+    cur = mysql.connection.cursor()
+    info = request.get_json()
+    Branch_ID = info["Branch_ID"]
+    Name = info['Name']
+    Date_of_Birth = (info['Date_of_Birth'])
+
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        INSERT INTO EMPLOYEE (Branch_ID, Name, Date_of_Birth)
+        VALUES (%s, %s, %s)
+    """, (Branch_ID, Name, Date_of_Birth))
+    mysql.connection.commit()
+    rows_affected = cur.rowcount
+    cur.close()
+    return make_response(jsonify({"message": "Branch added successfully",
+                                  "rows_affected": rows_affected}), 201)
 
 if __name__ == "__main__":
     app.run(debug=True)
