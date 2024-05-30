@@ -24,7 +24,8 @@ def get_employee():
     data = cur.fetchall()
     cur.close()
 
-    return make_response(jsonify(data), 200)
+    return make_response(jsonify(data), 
+    200)
 
 @app.route("/employee/<int:id>", methods=["GET"])
 def get_employee_id(id):
@@ -51,7 +52,7 @@ def add_employee():
     mysql.connection.commit()
     rows_affected = cur.rowcount
     cur.close()
-    return make_response(jsonify({"message": "Branch added successfully",
+    return make_response(jsonify({"message": "Employee added successfully",
                                   "rows_affected": rows_affected}), 201)
 
 @app.route("/employee/<int:id>", methods=["PUT"])
@@ -69,7 +70,17 @@ def update_employee(id):
     mysql.connection.commit()
     rows_affected = cur.rowcount
     cur.close()
-    return make_response(jsonify({"message": "Branch updated successfully",
+    return make_response(jsonify({"message": "Employee updated successfully",
+                                  "rows_affected": rows_affected}), 200)
+
+@app.route("/employee/<int:id>", methods=["DELETE"])
+def delete_employee(id):
+    cur = mysql.connection.cursor()
+    cur.execute("DELETE FROM employee WHERE EmployeeID = %s", (id,))
+    mysql.connection.commit()
+    rows_affected = cur.rowcount
+    cur.close()
+    return make_response(jsonify({"message": "Employee deleted successfully",
                                   "rows_affected": rows_affected}), 200)
 
 if __name__ == "__main__":
