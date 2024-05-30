@@ -54,5 +54,23 @@ def add_employee():
     return make_response(jsonify({"message": "Branch added successfully",
                                   "rows_affected": rows_affected}), 201)
 
+@app.route("/employee/<int:id>", methods=["PUT"])
+def update_employee(id):
+    info = request.get_json()
+    Branch_ID = info["Branch_ID"]
+    Name = info['Name']
+    Date_of_Birth = (info['Date_of_Birth'])
+
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        UPDATE employee SET Branch_ID = %s, Name = %s, Date_of_Birth =%s
+        WHERE EmployeeID = %s
+    """, (Branch_ID, Name,Date_of_Birth,id))
+    mysql.connection.commit()
+    rows_affected = cur.rowcount
+    cur.close()
+    return make_response(jsonify({"message": "Branch updated successfully",
+                                  "rows_affected": rows_affected}), 200)
+
 if __name__ == "__main__":
     app.run(debug=True)
